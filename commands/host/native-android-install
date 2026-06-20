@@ -1,0 +1,18 @@
+#!/bin/bash
+
+## Description: Run native:install inside the android-builder container
+## Usage: native-android-install
+## Example: ddev native-android-install
+
+CONTAINER="ddev-${DDEV_SITENAME}-android-builder"
+
+if ! docker inspect "${CONTAINER}" > /dev/null 2>&1; then
+  echo "android-builder container not found. Run 'ddev restart' first."
+  exit 1
+fi
+
+echo "Running native:install in ${CONTAINER}..."
+echo ""
+
+docker exec -it "${CONTAINER}" \
+  php /var/www/html/artisan native:install

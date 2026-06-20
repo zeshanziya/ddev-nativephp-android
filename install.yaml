@@ -1,0 +1,15 @@
+name: ddev-nativephp-android
+project_files:
+  - docker-compose.android-builder.yaml
+  - commands/host/native-android-build
+  - commands/host/native-android-install
+global_files: []
+dependencies: []
+pre_install_actions: []
+post_install_actions:
+  - chmod +x .ddev/commands/host/native-android-build
+  - chmod +x .ddev/commands/host/native-android-install
+  - "#ddev-nativephp-android installed. Run 'ddev restart' to start the android-builder container."
+removal_actions:
+  - docker volume rm ddev-${DDEV_SITENAME}_gradle-cache 2>/dev/null || true
+ddev_version_constraint: ">= v1.22.0"
