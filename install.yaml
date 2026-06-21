@@ -3,6 +3,7 @@ project_files:
   - docker-compose.android-builder.yaml
   - commands/host/native-android-build
   - commands/host/native-android-install
+  - commands/host/native-android-credentials
 global_files: []
 dependencies: []
 pre_install_actions: []

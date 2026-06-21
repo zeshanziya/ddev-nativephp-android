@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Description: Build Android APK/AAB inside the android-builder container (no host tools required)
+## Description: Build a signed Android APK/AAB inside the android-builder container (no host tools required)
 ## Usage: native-android-build [--release|--bundle]
 ## Example: ddev native-android-build
 ## Example: ddev native-android-build --release
@@ -15,18 +15,18 @@ for arg in "$@"; do
   esac
 done
 
-CONTAINER="ddev-${DDEV_SITENAME}-android-builder"
+CONTAINER=$(docker ps --filter "name=ddev-${DDEV_SITENAME}-android-builder" --filter "status=running" --format "{{.Names}}" | head -1)
 
-if ! docker inspect "${CONTAINER}" > /dev/null 2>&1; then
-  echo "android-builder container not found. Run 'ddev restart' first."
+if [ -z "$CONTAINER" ]; then
+  echo "android-builder container is not running. Run 'ddev restart' first."
   exit 1
 fi
 
-echo "Building Android (${BUILD_TYPE}) in ${CONTAINER}..."
+echo "Building signed Android (${BUILD_TYPE}) in ${CONTAINER}..."
 echo ""
 
-docker exec -i "${CONTAINER}" \
-  php /var/www/html/artisan native:run \
-  --target=android \
-  "--${BUILD_TYPE}" \
+docker exec -i "$CONTAINER" \
+  php /var/www/html/artisan native:package \
+  --android \
+  "--build-type=${BUILD_TYPE}" \
   --no-tty
